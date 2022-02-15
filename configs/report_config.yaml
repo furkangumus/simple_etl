@@ -1,0 +1,53 @@
+# configuration specific to creating s3 connections
+s3:
+  access_key: 'AWS_ACCESS_KEY_ID'
+  secret_key: 'AWS_SECRET_ACCESS_KEY'
+  src_endpoint_url: 'https://s3.amazonaws.com'
+  src_bucket: 'deutsche-boerse-xetra-pds'
+  dest_endpoint_url: 'https://s3.amazonaws.com'
+  dest_bucket: 'simple-etl-target-bucket'
+
+# configuration specific to the source
+source:
+  src_first_extract_date: '2022-01-31'
+  src_columns: ['ISIN', 'Mnemonic', 'Date', 'Time', 'StartPrice', 'EndPrice', 'MinPrice', 'MaxPrice', 'TradedVolume']
+  src_col_date: 'Date'
+  src_col_isin: 'ISIN'
+  src_col_time: 'Time'
+  src_col_min_price: 'MinPrice'
+  src_col_start_price: 'StartPrice'
+  src_col_max_price: 'MaxPrice'
+  src_col_traded_vol: 'TradedVolume'
+  
+# configuration specific to the source
+destination:
+  dest_key: 'report1/xetra_daily_report1_'
+  dest_key_date_format: '%Y%m%d_%H%M%S'
+  dest_format: 'parquet'
+  dest_col_isin: 'isin'
+  dest_col_date: 'date'
+  dest_col_op_price: 'opening_price_eur'
+  dest_col_cls_price: 'closing_price_eur'
+  dest_col_min_price: 'minimum_price_eur'
+  dest_col_max_price: 'maximum_price_eur'
+  dest_col_daily_trd_vol: 'daily_traded_volume'
+  dest_col_chg_prev_cls: 'change_prev_closing_%'
+
+# configuration specific to the meta file
+meta:
+  meta_key: 'meta/report1/xetra_report1_meta_file.csv'
+
+# Logging Configuration
+logging:
+  version: 1
+  formatters:
+    report: 
+      format: "Report Transformer - %(asctime)s - %(levelname)s - %(message)s"
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: report
+      level: DEBUG
+  root:
+    level: DEBUG
+    handlers: [console]  
