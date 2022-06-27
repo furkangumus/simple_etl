@@ -8,7 +8,7 @@ pandas = "*"
 boto3 = "*"
 pyarrow = "*"
 pyyaml = "*"
-
+pandas-gbq = "*"
 
 [dev-packages]
 awscli = "*"

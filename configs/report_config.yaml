@@ -31,7 +31,7 @@ destination:
   dest_col_min_price: 'minimum_price_eur'
   dest_col_max_price: 'maximum_price_eur'
   dest_col_daily_trd_vol: 'daily_traded_volume'
-  dest_col_chg_prev_cls: 'change_prev_closing_%'
+  dest_col_chg_prev_cls: 'change_prev_closing_percent'
 
 # configuration specific to the meta file
 meta:

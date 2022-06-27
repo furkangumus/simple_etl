@@ -7,6 +7,7 @@ import pandas as pd
 
 from app.common.meta_process import MetaProcess
 from app.common.s3 import S3BucketConnector
+from app.common.bq import BigQueryConnector
 
 class SourceConfig(NamedTuple):
     """Class for source configuration data
@@ -69,8 +70,8 @@ class ReportETL():
     to destination in parquet format.
     """
     def __init__(self, src_bucket: S3BucketConnector,
-                 dest_bucket: S3BucketConnector, meta_key: str,
-                 src_args: SourceConfig, dest_args: DestinationConfig) -> None:
+                 dest_bucket: S3BucketConnector=None, meta_key: str=None,
+                 src_args: SourceConfig=None, dest_args: DestinationConfig=None) -> None:
         """
         Constructor for ReportETL
 
@@ -89,6 +90,7 @@ class ReportETL():
         self.meta_key = meta_key
         self.src_args = src_args
         self.dest_args = dest_args
+        self.bq_conn = BigQueryConnector(project_id='circular-unity-dl18405', dataset_name='project2', table_name='stock_market')
 
         self.extract_date, self.extract_date_list = MetaProcess\
             .return_date_list(
@@ -210,11 +212,12 @@ class ReportETL():
             f'{self.dest_args.dest_format}'
         )
         # Write to the destination
-        self.dest_bucket.to_s3(df, target_key, self.dest_args.dest_format)
+        #self.dest_bucket.to_s3(df, target_key, self.dest_args.dest_format)
+        self.bq_conn.to_bq(df)
         self._logger.info('Report for <%s> successfully written.', 
                           datetime.today().strftime('%Y-%m-%d'))
         # update metafile
-        MetaProcess.update_meta_file(self.meta_update_list, self.meta_key, self.dest_bucket)
+        #MetaProcess.update_meta_file(self.meta_update_list, self.meta_key, self.dest_bucket)
         self._logger.info('Report meta file succesfully updated.')
         
         return True
